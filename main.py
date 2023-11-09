@@ -1,55 +1,67 @@
 import time
 import random
 
+# Definição da classe Dispositivo
 class Dispositivo:
     def __init__(self, nome, uso_simultaneo, tempo_operacao):
         self.nome = nome
-        self.uso_simultaneo = uso_simultaneo
-        self.tempo_operacao = tempo_operacao
-        self.fila = []
-        self.processos_bloqueados = []
+        self.uso_simultaneo = uso_simultaneo  # Número máximo de usos simultâneos permitidos para este dispositivo
+        self.tempo_operacao = tempo_operacao  # Tempo necessário para operar este dispositivo
+        self.fila = []  # Fila de processos que solicitaram este dispositivo
+        self.processos_bloqueados = []  # Lista de processos que estão bloqueados esperando este dispositivo
 
+    # Método para solicitar o uso do dispositivo por um processo
     def solicitar(self, processo):
+        # Se o número de processos na fila for menor que o número de usos simultâneos permitidos,
+        # o processo pode usar o dispositivo imediatamente
         if len(self.fila) < self.uso_simultaneo:
             self.fila.append(processo)
             return True
-        else:
+        else:  # Caso contrário, o processo deve esperar
             return False
 
+    # Método para liberar o dispositivo após o uso por um processo
     def liberar(self):
         if self.fila:
-            processo = self.fila.pop(0)
-            processo.ponto_bloqueio = None
-            self.processos_bloqueados.append(processo)
+            processo = self.fila.pop(0)  # Remove o processo que terminou de usar o dispositivo da fila
+            processo.ponto_bloqueio = None  # Limpa o ponto de bloqueio do processo
+            self.processos_bloqueados.append(processo)  # Adiciona o processo à lista de processos bloqueados
 
+    # Método para desbloquear processos que estavam esperando este dispositivo
     def desbloquear(self, unidade_tempo_atual):
         for processo in self.processos_bloqueados:
+            # Se o processo estava bloqueado e o tempo atual é maior ou igual ao tempo em que o processo foi bloqueado mais o tempo de operação do dispositivo,
+            # o processo é desbloqueado
             if processo.ponto_bloqueio is not None and unidade_tempo_atual >= processo.ponto_bloqueio + self.tempo_operacao:
-                self.processos_bloqueados.remove(processo)
-                self.fila.append(processo)
-                processo.ponto_bloqueio = None
+                self.processos_bloqueados.remove(processo)  # Remove o processo da lista de processos bloqueados
+                self.fila.append(processo)  # Adiciona o processo à fila do dispositivo
+                processo.ponto_bloqueio = None  # Limpa o ponto de bloqueio do processo
 
-
+# Definição da classe Processo
 class Processo:
     def __init__(self, nome, tempo_execucao, chance_requisitar_ES):
         self.nome = nome
-        self.tempo_execucao = tempo_execucao
-        self.chance_requisitar_ES = chance_requisitar_ES
-        self.ponto_bloqueio = None
-        self.dispositivo_solicitado = None
+        self.tempo_execucao = tempo_execucao  # Tempo necessário para executar este processo
+        self.chance_requisitar_ES = chance_requisitar_ES  # Chance de este processo solicitar E/S
+        self.ponto_bloqueio = None  # Ponto no tempo em que este processo foi bloqueado
+        self.dispositivo_solicitado = None  # Dispositivo que este processo solicitou
 
+    # Método para solicitar o uso de um dispositivo
     def solicitar_dispositivo(self, dispositivo):
+        # Se o dispositivo puder ser usado imediatamente, o processo usa o dispositivo
         if dispositivo.solicitar(self):
             return True
-        else:
+        else:  # Caso contrário, o processo armazena o dispositivo solicitado e espera
             self.dispositivo_solicitado = dispositivo
             return False
 
+# Função para ler o arquivo de entrada
 def ler_arquivo(nome_arquivo):
     with open(nome_arquivo, 'r') as arquivo:
         linhas = arquivo.readlines()
     return linhas
 
+# Função para processar as informações dos dispositivos a partir das linhas do arquivo de entrada
 def processar_dispositivos(linhas):
     dispositivos_info = linhas[0].strip().split('|')
     numero_dispositivos = int(dispositivos_info[-1])
@@ -62,6 +74,7 @@ def processar_dispositivos(linhas):
         dispositivos.append(Dispositivo(nome_dispositivo, uso_simultaneo, tempo_operacao))
     return dispositivos
 
+# Função para processar as informações do algoritmo de escalonamento a partir das linhas do arquivo de entrada
 def processar_algoritmo(linhas):
     info = linhas[0].strip().split('|')
     algoritmo_escalonamento = info[0]
@@ -69,6 +82,7 @@ def processar_algoritmo(linhas):
 
     return algoritmo_escalonamento, fracao_CPU
 
+# Função para processar as informações dos processos a partir das linhas do arquivo de entrada
 def processar_processos(linhas, numero_dispositivos):
     processos = []
     for linha in linhas[numero_dispositivos + 1:]:
@@ -79,6 +93,7 @@ def processar_processos(linhas, numero_dispositivos):
         processos.append(Processo(nome_processo, tempo_execucao, chance_requisitar_ES))
     return processos
 
+# Função para gerar informações aleatórias para simular a execução de um processo
 def gerar_informacao_aleatoria(processo, dispositivos, unidade_tempo_atual, fracaoCPU):
     chance = random.randint(1, 100)
     if chance <= processo.chance_requisitar_ES:
@@ -90,6 +105,7 @@ def gerar_informacao_aleatoria(processo, dispositivos, unidade_tempo_atual, frac
     else:
         return f"Chance | {chance} (Não requisitou ES)", None
 
+# Função para executar os processos
 def executar_processos(processos, dispositivos, tempo_escalonamento):
     processos_bloqueados = []
     unidade_tempo_atual = 0
@@ -147,6 +163,7 @@ def executar_processos(processos, dispositivos, tempo_escalonamento):
     for dispositivo, tempo_bloqueio in tempo_bloqueio_dispositivos.items():
         print(f"Tempo total de bloqueio para {dispositivo}: {tempo_bloqueio} unidades de tempo")
 
+# Função para imprimir as informações dos dispositivos
 def imprimir_informacoes_dispositivos(dispositivos):
     print("Informações dos Dispositivos:")
     for dispositivo in dispositivos:
@@ -155,6 +172,7 @@ def imprimir_informacoes_dispositivos(dispositivos):
         print("Tempo de Operação:", dispositivo.tempo_operacao)
         print()
 
+# Função principal
 def main():
     nome_arquivo = 'entrada_ES.txt'
     linhas = ler_arquivo(nome_arquivo)
@@ -166,5 +184,6 @@ def main():
     executar_processos(processos, dispositivos, fracao_cpu)
     imprimir_informacoes_dispositivos(dispositivos)
 
+# Verifica se este arquivo é o arquivo principal e, em caso afirmativo, chama a função principal
 if __name__ == "__main__":
     main()
