@@ -31,7 +31,7 @@ class Dispositivo:
 
 
 class Processo:
-    def _init_(self, nome, tempo_execucao, chance_requisitar_ES):
+    def __init__(self, nome, tempo_execucao, chance_requisitar_ES):
         self.nome = nome
         self.tempo_execucao = tempo_execucao
         self.chance_requisitar_ES = chance_requisitar_ES
@@ -166,5 +166,5 @@ def main():
     executar_processos(processos, dispositivos, fracao_cpu)
     imprimir_informacoes_dispositivos(dispositivos)
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     main()
