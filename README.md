@@ -1,12 +1,12 @@
 <h1 align="center">
-  <img src="coffe_logo.png" alt="coffe" width="70">
+  <img src="coffe_img.png" alt="coffe" width="70">
 <br>
-Federal University of Rio Grande - FURG
+Federal University of Rio Grande - FURG 
+
 Coffee Team - Sistema de Arquivos ☕ 
 </h1>
 
-<p> This project is to implement an i-node based file system. Your 256MB hard drive uses 4KB blocks. Each i-node stores file/directory details and access permissions. The system supports file and directory operations like creation, removal, content addition, reading, copying, renaming, and linking.
-  
+<p> 
 The objective of this work is to implement a file system based on i-nodes. To do this, consider the following information:
 
 Your hard drive has a capacity of 256 MB
@@ -53,20 +53,9 @@ Instruções de execução do Gerenciador de Processos
 
 <h4>
   
-  
-    Passo 1: Abra o seu terminal (cmd) e digite o seguinte comando para executar o programa:
+    Abra o seu terminal (cmd) e digite o seguinte comando para executar o programa:
     python main.py    
-    Passo 2: Informe o nome do arquivo que deseja usar, juntamente de sua extensão.
-  
-    -> Para testar o algoritmo de alternância circular digite "alternancia.txt".
-    -> Para testar o algoritmo de prioridades digite "prioridades.txt".
-    -> Para testar o algoritmo de loteria digite "loteria.txt".
-    -> Para testar o algoritmo de CFS digite "cfs.txt".
 
-    Passo 3: Com o seu programa em execução é possível inserir um novo processo. Para isso, digite um processo seguindo o seguinte formato: 
-    nomeProcesso|PID|tempoDeExecução|prioridade (ou bilhetes)|UID|qtdeMemoria
-
-    Exemplo de novo processo para ser inserido: processo-1111|1111|56|99|1|5120
 </h4>
 
 
