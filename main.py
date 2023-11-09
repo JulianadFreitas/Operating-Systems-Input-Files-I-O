@@ -37,7 +37,6 @@ class Dispositivo:
                 self.fila.append(processo)  # Adiciona o processo à fila do dispositivo
                 processo.ponto_bloqueio = None  # Limpa o ponto de bloqueio do processo
 
-# Definição da classe Processo
 class Processo:
     def __init__(self, nome, tempo_execucao, chance_requisitar_ES):
         self.nome = nome
